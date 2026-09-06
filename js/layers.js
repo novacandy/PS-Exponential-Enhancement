@@ -146,26 +146,14 @@ addLayer("e", {
         11: {
             title() {return "Enhancers (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let costBase = new Decimal(10)
-                let costScaling = new Decimal(10)
-                let costSoftcapStart = this.softcapStart()
-                let costSoftcapScaling = this.softcapScaling()
-                let cost = costBase.mul(costScaling.pow(x))
-                if (x.gte(costSoftcapStart)) cost = costBase.mul(costScaling.pow(x.sub(100).mul(costSoftcapScaling).add(100)))
+                let cost = Decimal.pow(10, x.add(1))
+                if (x.gte(100)) cost = Decimal.pow(10, x.sub(100).mul(2).add(100).add(1))
                 if (hasUpgrade('e', 31)) cost = cost.div(upgradeEffect("e", 31))
                 return cost
             },
-            softcapStart() {
-                let start = new Decimal(100)
-                return start
-            },
-            softcapScaling() {
-                let scaling = new Decimal(2)
-                return scaling
-            },
             display() {return `Multiplying point gain exponent by x${format(this.effectBase())} each
                 Currently: ^${format(this.effect())}
-                Cost: ${format(this.cost())} enhance points ${getBuyableAmount(this.layer, this.id).gte(this.softcapStart()) ? "<br><b style='color: #ff0000'>[SOFTCAPPED]</b>" : ""}`
+                Cost: ${format(this.cost())} enhance points ${getBuyableAmount(this.layer, this.id).gte(100) ? "<br><b style='color: #ff0000'>[SOFTCAPPED]</b>" : ""}`
             },
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id))
@@ -214,7 +202,10 @@ addLayer("e", {
         {key: "e", description: "E: Reset for enhance points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     update(diff) {
-        if (hasMilestone('i', 5) && tmp.e.buyables[11].canAfford) setBuyableAmount('e', 11, getBuyableAmount('e', 11).add(1))
+        if (hasMilestone('i', 5) && tmp.e.buyables[11].canAfford) {
+            if (getBuyableAmount('e', 11).gte(100)) setBuyableAmount('e', 11, player.e.points.mul(hasUpgrade('e', 31) ? upgradeEffect('e', 31) : 1).max(1).log(10).add(100).div(2).sub(100).max(1))
+            setBuyableAmount('e', 11, player.e.points.mul(hasUpgrade('e', 31) ? upgradeEffect('e', 31) : 1).max(1).log(10).max(1))
+        }
     },
     tabFormat: [
         "main-display",
@@ -511,6 +502,7 @@ addLayer('a', {
     },
     gainExp() {
         let exp = new Decimal(1)
+        exp = exp.mul(tmp.n.effect)
         return exp
     },
 
@@ -533,17 +525,17 @@ addLayer('a', {
         11: {
             title: "Begin The Augmentation?",
             description() {return "Augmented energy generation is faster based on augmented points. Effect: ^" + format(this.effect())},
-            cost: new Decimal(250),
+            cost: new Decimal(100),
             effect() {
-                let effect = player.a.points.add(1).log(10).add(1)
+                let effect = player.a.points.add(1).log(10).pow(1.1).add(1)
                 return effect
             },
             unlocked() {return true}
         },
         12: {
-            title: "Iterate The Enhancers",
+            title: "Iterated Enhancers",
             description() {return "Iterator effect also increases the enhancer effect base. Effect: +" + format(this.effect())},
-            cost: new Decimal(500),
+            cost: new Decimal(250),
             effect() {
                 let effect = tmp.i.effect
                 return effect
@@ -575,7 +567,7 @@ addLayer('a', {
         23: {
             title: "Automentation",
             description() {return "Passively earn augmenters and augmented points every tick. Effect: +" + format(this.effect()) + " augmenters/sec"},
-            cost: new Decimal("ee100"),
+            cost: new Decimal("ee10"),
             effect() {
                 let effect = player.a.points.add(1).log(10).add(1)
                 return effect
@@ -627,15 +619,15 @@ addLayer('a', {
 
     milestones: {
         0: {
-            requirementDescription: "10 augmented points",
+            requirementDescription: "7 augmented points",
             effectDescription: "Start resets with enhance points amd enhancers equal to your current augmented point amount",
-            done() {return player.a.points.gte(10)},
+            done() {return player.a.points.gte(7)},
             unlocked() {return true}
         },
         1: {
-            requirementDescription: "100 augmented points",
+            requirementDescription: "49 augmented points",
             effectDescription: "Start resets with iterations and boosters equal to your current augmented point amount",
-            done() {return player.a.points.gte(100)},
+            done() {return player.a.points.gte(49)},
             unlocked() {return hasMilestone('a', 0)}
         }
     },
@@ -878,7 +870,9 @@ addLayer("n", {
         points: new Decimal(0),
         resetTime: 0,
         intensifiedPoints: new Decimal(1),
-        intensifiedDimensions: [new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2)]
+        intensifiedDimensions: [new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2), new Decimal(2)],
+        ID4Exp: new Decimal(1),
+        ID7Exp: new Decimal(1)
     }},
     type: "custom",
     baseAmount() {return player.a.points},
@@ -913,7 +907,7 @@ addLayer("n", {
         return effect
     },
     effectDescription() {
-        return `which are raising effective super boosters to the power of ^${format(tmp[this.layer].effect)}`
+        return `which are raising augmented point gain and effective super boosters to the power of ^${format(tmp[this.layer].effect)}`
     },
 
     allIDsExponent() {
@@ -993,7 +987,7 @@ addLayer("n", {
         11: {
             requirementDescription: "100 intensifiers",
             effectDescription: "Fully automate intensifiers",
-            done() {return player.n.points.gte(24)},
+            done() {return player.n.points.gte(100)},
             unlocked() {return hasMilestone('n', 10)}
         }
     },
@@ -1015,7 +1009,7 @@ addLayer("n", {
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
                 if (hasUpgrade('n', 13)) effect = effect.mul(upgradeEffect('n', 13))
-                if (player.n.points.gte(5)) effect = effect.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(player.n.resetTime))
+                if (player.n.points.gte(5)) effect = effect.mul(player.n.ID4Exp)
                 return effect
             },
             effectBase() {
@@ -1048,7 +1042,7 @@ addLayer("n", {
             },
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
-                if (player.n.points.gte(5)) effect = effect.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(player.n.resetTime))
+                if (player.n.points.gte(5)) effect = effect.mul(player.n.ID4Exp)
                 return effect
             },
             effectBase() {
@@ -1081,7 +1075,7 @@ addLayer("n", {
             },
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
-                if (hasMilestone('n', 4)) effect = effect.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(player.n.resetTime))
+                if (hasMilestone('n', 4)) effect = effect.mul(player.n.ID4Exp)
                 return effect
             },
             effectBase() {
@@ -1102,7 +1096,7 @@ addLayer("n", {
         21: {
             title() {return "Intensified Dimension IV (x" + format(player.n.intensifiedDimensions[3]) + ") (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(1.25, x).mul(50)))
+                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(2, x).mul(50)))
                 return cost
             },
             display() {return `Multiplying intensified dimension III and the exponents of the above 3 buyables by x${format(player.n.intensifiedDimensions[3].pow(buyableEffect(this.layer, this.id)))} per second
@@ -1113,7 +1107,7 @@ addLayer("n", {
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
                 if (hasUpgrade('n', 21)) effect = effect.mul(upgradeEffect('n', 21))
-                if (hasMilestone('n', 7)) effect = effect.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(player.n.resetTime))
+                if (hasMilestone('n', 7)) effect = effect.mul(player.n.ID7Exp)
                 return effect
             },
             effectBase() {
@@ -1134,7 +1128,7 @@ addLayer("n", {
         22: {
             title() {return "Intensified Dimension V (x" + format(player.n.intensifiedDimensions[4]) + ") (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(1.5, x).mul(100)))
+                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(5, x).mul(100)))
                 return cost
             },
             display() {return `Multiplying intensified dimension IV by x${format(player.n.intensifiedDimensions[4].pow(buyableEffect(this.layer, this.id)))} per second
@@ -1144,7 +1138,7 @@ addLayer("n", {
             },
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
-                if (hasMilestone('n', 7)) effect = effect.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(player.n.resetTime))
+                if (hasMilestone('n', 7)) effect = effect.mul(player.n.ID7Exp)
                 return effect
             },
             effectBase() {
@@ -1175,7 +1169,7 @@ addLayer("n", {
             },
             effect() {
                 let effect = this.effectBase().pow(getBuyableAmount(this.layer, this.id)).mul(tmp.n.allIDsExponent)
-                if (hasMilestone('n', 7)) effect = effect.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(player.n.resetTime))
+                if (hasMilestone('n', 7)) effect = effect.mul(player.n.ID7Exp)
                 return effect
             },
             effectBase() {
@@ -1323,7 +1317,7 @@ addLayer("n", {
             description() {return "Earn an exponent to Intensified Dimension I based on iterations. Effect: ^" + format(this.effect())},
             cost: new Decimal("e1e18"),
             effect() {
-                let effect = player.i.points.add(1).slog(10).pow(3).add(1)
+                let effect = player.i.points.add(1).slog(10).pow(7).add(1)
                 return effect
             },
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
@@ -1335,9 +1329,9 @@ addLayer("n", {
         14: {
             title: "Need More Boosts",
             description() {return "Increase the intensified dimension purchase exponent based on boosters. Effect: +" + format(this.effect())},
-            cost: new Decimal("e1e24"),
+            cost: new Decimal("e1e30"),
             effect() {
-                let effect = player.b.points.add(1).slog(10).pow(0.1)
+                let effect = player.b.points.add(1).slog(10).pow(0.2)
                 return effect
             },
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
@@ -1454,7 +1448,7 @@ addLayer("n", {
         "prestige-button",
         "resource-display",
         "milestones",
-        ["display-text", () => {return `You have ${format(player.n.intensifiedPoints)} intensified points, which directly translate to an exponent to effective intensifiers`}],
+        ["display-text", () => {if (hasMilestone('n', 1)) return `You have ${format(player.n.intensifiedPoints)} intensified points, which directly translate to an exponent to effective intensifiers`}],
         "blank",
         "buyables",
         "blank",
@@ -1476,6 +1470,8 @@ addLayer("n", {
         if (hasMilestone('n', 8)) player.n.intensifiedDimensions[6] = player.n.intensifiedDimensions[6].mul(player.n.intensifiedDimensions[7].pow(buyableEffect('n', 32).pow(diff)))
         if (hasMilestone('n', 9)) player.n.intensifiedDimensions[7] = player.n.intensifiedDimensions[7].mul(player.n.intensifiedDimensions[8].pow(buyableEffect('n', 33).pow(diff)))
         
+        if (hasMilestone('n', 4)) player.n.ID4Exp = player.n.ID4Exp.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(diff))
+        if (hasMilestone('n', 7)) player.n.ID7Exp = player.n.ID7Exp.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(diff))
 
         if (hasMilestone('n', 5)) { // buy max row 1 IDs
             let buy1 = player.n.intensifiedPoints.add(1).log(10).add(1).log(10)
@@ -1486,9 +1482,9 @@ addLayer("n", {
             setBuyableAmount('n', 13, buy3)
         }
         if (hasMilestone('n', 8)) {
-            let buy4 = player.n.intensifiedPoints.add(1).log(1.25).div(50).add(1).log(10).add(1).log(10)
+            let buy4 = player.n.intensifiedPoints.add(1).log(2).div(50).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 21, buy4)
-            let buy5 = player.n.intensifiedPoints.add(1).log(1.5).div(100).add(1).log(10).add(1).log(10)
+            let buy5 = player.n.intensifiedPoints.add(1).log(5).div(100).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 22, buy5)
             let buy6 = player.n.intensifiedPoints.add(1).log(10).div(1e42).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 23, buy6)

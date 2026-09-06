@@ -687,7 +687,7 @@ addLayer("f", {
 
     milestones: {
         0: {
-            requirementDescription: "Reach the Maximum Safe Integer",
+            requirementDescription: "Reach the Maximum Safe Integer (~F9.00e15)",
             effectDescription: "Point gain is set to 10^^(further enhance point effect), and passively gain 100% of furtherer enhance point gain every second",
             done() {return getPointGen().gte(Decimal.tetrate(10, Number.MAX_SAFE_INTEGER - 1))},
             unlocked() {return hasUpgrade('f', 45)}
