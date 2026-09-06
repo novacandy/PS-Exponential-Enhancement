@@ -1460,18 +1460,18 @@ addLayer("n", {
     ],
 
     update(diff) {
-        if (hasMilestone('n', 1)) player.n.intensifiedPoints = player.n.intensifiedPoints.mul(player.n.intensifiedDimensions[0].pow(buyableEffect('n', 11)).pow(diff))
-        if (hasMilestone('n', 2)) player.n.intensifiedDimensions[0] = player.n.intensifiedDimensions[0].mul(player.n.intensifiedDimensions[1].pow(buyableEffect('n', 12).pow(diff)))
-        if (hasMilestone('n', 3)) player.n.intensifiedDimensions[1] = player.n.intensifiedDimensions[1].mul(player.n.intensifiedDimensions[2].pow(buyableEffect('n', 13).pow(diff)))
-        if (hasMilestone('n', 4)) player.n.intensifiedDimensions[2] = player.n.intensifiedDimensions[2].mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21).pow(diff)))
-        if (hasMilestone('n', 5)) player.n.intensifiedDimensions[3] = player.n.intensifiedDimensions[3].mul(player.n.intensifiedDimensions[4].pow(buyableEffect('n', 22).pow(diff)))
-        if (hasMilestone('n', 6)) player.n.intensifiedDimensions[4] = player.n.intensifiedDimensions[4].mul(player.n.intensifiedDimensions[5].pow(buyableEffect('n', 23).pow(diff)))
-        if (hasMilestone('n', 7)) player.n.intensifiedDimensions[5] = player.n.intensifiedDimensions[5].mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31).pow(diff)))
-        if (hasMilestone('n', 8)) player.n.intensifiedDimensions[6] = player.n.intensifiedDimensions[6].mul(player.n.intensifiedDimensions[7].pow(buyableEffect('n', 32).pow(diff)))
-        if (hasMilestone('n', 9)) player.n.intensifiedDimensions[7] = player.n.intensifiedDimensions[7].mul(player.n.intensifiedDimensions[8].pow(buyableEffect('n', 33).pow(diff)))
+        if (hasMilestone('n', 1)) player.n.intensifiedPoints = player.n.intensifiedPoints.mul(player.n.intensifiedDimensions[0].pow(buyableEffect('n', 11)).pow(diff)).max(1)
+        if (hasMilestone('n', 2)) player.n.intensifiedDimensions[0] = player.n.intensifiedDimensions[0].mul(player.n.intensifiedDimensions[1].pow(buyableEffect('n', 12).pow(diff))).max(1)
+        if (hasMilestone('n', 3)) player.n.intensifiedDimensions[1] = player.n.intensifiedDimensions[1].mul(player.n.intensifiedDimensions[2].pow(buyableEffect('n', 13).pow(diff))).max(1)
+        if (hasMilestone('n', 4)) player.n.intensifiedDimensions[2] = player.n.intensifiedDimensions[2].mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21).pow(diff))).max(1)
+        if (hasMilestone('n', 5)) player.n.intensifiedDimensions[3] = player.n.intensifiedDimensions[3].mul(player.n.intensifiedDimensions[4].pow(buyableEffect('n', 22).pow(diff))).max(1)
+        if (hasMilestone('n', 6)) player.n.intensifiedDimensions[4] = player.n.intensifiedDimensions[4].mul(player.n.intensifiedDimensions[5].pow(buyableEffect('n', 23).pow(diff))).max(1)
+        if (hasMilestone('n', 7)) player.n.intensifiedDimensions[5] = player.n.intensifiedDimensions[5].mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31).pow(diff))).max(1)
+        if (hasMilestone('n', 8)) player.n.intensifiedDimensions[6] = player.n.intensifiedDimensions[6].mul(player.n.intensifiedDimensions[7].pow(buyableEffect('n', 32).pow(diff))).max(1)
+        if (hasMilestone('n', 9)) player.n.intensifiedDimensions[7] = player.n.intensifiedDimensions[7].mul(player.n.intensifiedDimensions[8].pow(buyableEffect('n', 33).pow(diff))).max(1)
         
-        if (hasMilestone('n', 4)) player.n.ID4Exp = player.n.ID4Exp.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(diff))
-        if (hasMilestone('n', 7)) player.n.ID7Exp = player.n.ID7Exp.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(diff))
+        if (hasMilestone('n', 4)) player.n.ID4Exp = player.n.ID4Exp.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(diff)).max(1)
+        if (hasMilestone('n', 7)) player.n.ID7Exp = player.n.ID7Exp.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(diff)).max(1)
 
         if (hasMilestone('n', 5)) { // buy max row 1 IDs
             let buy1 = player.n.intensifiedPoints.add(1).log(10).add(1).log(10)
