@@ -99,6 +99,7 @@ const furtherDialogue = {
             {erinText: () => {return "I hate it here. I really, really hate it here..."}, erinPortrait: "erinCrying"},
             {erinText: () => {return "I don't understand how Mimi and Lori keep their cool doing this job."}, erinPortrait: "erinCrying"},
             {erinText: () => {return "So many expectations, so many demands... how do they see this as normal?"}, erinPortrait: "erinCrying"},
+            {erinText: () => {return "They enjoy doing this so much. I don't."}, erinPortrait: "erinCrying"},
             {erinText: () => {return "I don't know what to do, I've been given so many privileges but so many responsibilities..."}, erinPortrait: "erinCrying"},
             {erinText: () => {return "It's too much... Why me... I..."}, erinPortrait: "erinCrying"},
             {erinText: () => {return "..."}, erinPortrait: "erinCrying"},
@@ -194,6 +195,7 @@ addLayer("f", {
         let interval = new Decimal(1).mul(buyableEffect('f', 22))
         if (hasUpgrade('f', 12)) interval = interval.div(upgradeEffect('f', 12))
         if (hasUpgrade('f', 14)) interval = interval.div(20)
+        if (hasUpgrade('f', 43)) interval = interval.div(tmp.f.effect)
         interval = interval.mul(tmp.f.enhancedReplicantiSoftcapEffect)
         return interval
     },
@@ -316,7 +318,7 @@ addLayer("f", {
         14: {
             title: "The Swarm",
             description() {return "Enhanced replicanti replicates 20 times faster."},
-            cost: new Decimal(1e63),
+            cost: new Decimal(1e54),
             currencyLayer: "f",
             currencyDisplayName: "enhance energy",
             currencyInternalName: "enhanceEnergy",
@@ -325,7 +327,7 @@ addLayer("f", {
         15: {
             title: "Strongerer Mergeable Enhancers",
             description() {return "Increase the mergeable enhancer base again. (x3.50 -> x4.00)"},
-            cost: new Decimal(1e120),
+            cost: new Decimal(1e100),
             currencyLayer: "f",
             currencyDisplayName: "enhance energy",
             currencyInternalName: "enhanceEnergy",
@@ -333,7 +335,7 @@ addLayer("f", {
         },
         21: {
             title: "Recombination",
-            description() {return "Replicanti galaxy requirement scales 25% slower."},
+            description() {return "Enhanced replicanti galaxy requirement scales 25% slower."},
             cost: new Decimal(1e42),
             unlocked() {return hasUpgrade('f', 11)},
         },
@@ -363,13 +365,13 @@ addLayer("f", {
                 }
                 return effect
             },
-            cost: new Decimal(1e75),
+            cost: new Decimal(1e72),
             unlocked() {return hasUpgrade('f', 23)}
         },
         25: {
             title: "Enhance<sup>2</sup> Energy",
             description() {return "Improve the enhanced energy effect formula."},
-            cost: new Decimal(1e120),
+            cost: Decimal.dInf,
             unlocked() {return hasUpgrade('f', 24)}
         },
         31: {
@@ -385,6 +387,10 @@ addLayer("f", {
             title: "Keep Enhanced Replicanti",
             description() {return "Start further enhance resets with <b>Luckier Enhanced Replicanti</b> and <b>Faster Enhanced Replicanti</b> at max level."},
             cost: new Decimal(1),
+            onPurchase() {
+                setBuyableAmount('f', 21, new Decimal(90))
+                setBuyableAmount('f', 22, new Decimal(40))
+            },
             currencyLayer: "f",
             currencyDisplayName: "furtherer enhance points",
             currencyInternalName: "furthererEnhancePoints",
@@ -401,8 +407,11 @@ addLayer("f", {
         },
         34: {
             title: "Keep Enhance Energy",
-            description() {return "Start furtherer enhance resets with the first row of enhance energy upgrades."},
+            description() {return "Start furtherer enhance resets with all enhance energy upgrades purchased."},
             cost: new Decimal(1),
+            onPurchase() {
+                player.f.upgrades.push(...[11, 12, 13, 14, 15, 21, 22, 23, 24, 25])
+            },
             currencyLayer: "f",
             currencyDisplayName: "furtherer enhance points",
             currencyInternalName: "furthererEnhancePoints",
@@ -445,7 +454,7 @@ addLayer("f", {
         },
         43: {
             title: "Decapitate",
-            description() {return "Further enhance point effect applies to enhanced replicanti limit, and Enhanced Replicanti is no longer reset on Furtherer Enhance."},
+            description() {return "Improve Enhanced Replicanti based on further enhance point effect and no longer reset it on Furtherer Enhance."},
             cost: new Decimal(33),
             currencyLayer: "f",
             currencyDisplayName: "furtherer enhance points",
@@ -454,7 +463,7 @@ addLayer("f", {
         },
         44: {
             title: "Amplify",
-            description() {return "Further enhance point effect multiplies enhance energy generation speed and adds to its exponent, and Enhance Energy is no longer reset on Furtherer Enhance."},
+            description() {return "Improve Enhance Energy based on further enhance point effect and no longer reset it on Furtherer Enhance."},
             cost: new Decimal(75),
             currencyLayer: "f",
             currencyDisplayName: "furtherer enhance points",

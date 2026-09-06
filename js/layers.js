@@ -1096,7 +1096,7 @@ addLayer("n", {
         21: {
             title() {return "Intensified Dimension IV (x" + format(player.n.intensifiedDimensions[3]) + ") (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(2, x).mul(50)))
+                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(100, x).mul(50)))
                 return cost
             },
             display() {return `Multiplying intensified dimension III and the exponents of the above 3 buyables by x${format(player.n.intensifiedDimensions[3].pow(buyableEffect(this.layer, this.id)))} per second
@@ -1128,7 +1128,7 @@ addLayer("n", {
         22: {
             title() {return "Intensified Dimension V (x" + format(player.n.intensifiedDimensions[4]) + ") (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(5, x).mul(100)))
+                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(1000, x).mul(100)))
                 return cost
             },
             display() {return `Multiplying intensified dimension IV by x${format(player.n.intensifiedDimensions[4].pow(buyableEffect(this.layer, this.id)))} per second
@@ -1159,7 +1159,7 @@ addLayer("n", {
         23: {
             title() {return "Intensified Dimension VI (x" + format(player.n.intensifiedDimensions[5]) + ") (" + formatWhole(getBuyableAmount(this.layer, this.id)) + ")"},
             cost(x) {
-                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(10, x).mul(1e42)))
+                let cost = Decimal.pow(10, Decimal.pow(10, Decimal.pow(10000, x).mul(1e42)))
                 return cost
             },
             display() {return `Multiplying intensified dimension V by x${format(player.n.intensifiedDimensions[5].pow(buyableEffect(this.layer, this.id)))} per second
@@ -1357,7 +1357,7 @@ addLayer("n", {
         22: {
             title: "Erin E. Hansen",
             description() {return "Multiply intensified dimension purchase exponents based on recursions. Effect: x" + format(this.effect())},
-            cost: new Decimal("e1e100000"),
+            cost: new Decimal("ee1e12"),
             effect() {
                 let effect = player.r.points.add(1).slog(10).add(1).log(2.5).max(1)
                 return effect
@@ -1371,7 +1371,7 @@ addLayer("n", {
         23: {
             title: "Superior Empowerment",
             description() {return "Earn an exponent to Intensified Dimension VII's exponent based on super boosters. Effect: ^" + format(this.effect())},
-            cost: new Decimal("eeee1000"),
+            cost: new Decimal("eee1000000"),
             effect() {
                 let effect = player.sb.points.add(1).slog(10).add(1).log(3).add(1)
                 return effect
@@ -1385,7 +1385,7 @@ addLayer("n", {
         24: {
             title: "Ultimately Intensified",
             description() {return "Intensifiers directly translate to a multiplier to intensified dimension purchase exponents. Effect: x" + format(this.effect())},
-            cost: new Decimal("eeee10000"),
+            cost: new Decimal("eeee2500"),
             effect() {
                 let effect = player.n.points.add(1)
                 return effect
@@ -1399,7 +1399,7 @@ addLayer("n", {
         31: {
             title: "Lucky Seven",
             description() {return "Auto buy max Intensified Dimension VII and raise its exponent to the power of ^7."},
-            cost: new Decimal("eeee100000"),
+            cost: new Decimal("eeee10000"),
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1409,7 +1409,7 @@ addLayer("n", {
         32: {
             title: "Magic Eight",
             description() {return "Auto buy max Intensified Dimension VIII and raise effective purchased Intensified Dimension VII amount to the power of ^8."},
-            cost: new Decimal("eeeee1000"),
+            cost: new Decimal("eeeee250"),
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1419,7 +1419,7 @@ addLayer("n", {
         33: {
             title: "Nonexistent Nine",
             description() {return "Auto buy max Intensified Dimension IX and make the intensified point effect 9^x. Effect: ^" + format(Decimal.pow(9, player.n.intensifiedPoints))},
-            cost: new Decimal("eeeeee1000"),
+            cost: new Decimal("eeeeee100"),
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1482,11 +1482,11 @@ addLayer("n", {
             setBuyableAmount('n', 13, buy3)
         }
         if (hasMilestone('n', 8)) {
-            let buy4 = player.n.intensifiedPoints.add(1).log(2).div(50).add(1).log(10).add(1).log(10)
+            let buy4 = player.n.intensifiedPoints.add(1).log(100).div(50).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 21, buy4)
-            let buy5 = player.n.intensifiedPoints.add(1).log(5).div(100).add(1).log(10).add(1).log(10)
+            let buy5 = player.n.intensifiedPoints.add(1).log(1000).div(100).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 22, buy5)
-            let buy6 = player.n.intensifiedPoints.add(1).log(10).div(1e42).add(1).log(10).add(1).log(10)
+            let buy6 = player.n.intensifiedPoints.add(1).log(10000).div(1e42).add(1).log(10).add(1).log(10)
             setBuyableAmount('n', 23, buy6)
         }
         if (hasUpgrade('n', 31)) {
