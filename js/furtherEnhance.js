@@ -119,6 +119,7 @@ const furtherDialogue = {
 }
 
 function renderDialogue(step) {
+    if (furtherDialogue[dialogueID].dialogue[dialogueLine] == undefined) return ""
     let ret = ""
     for (let i = 0; i < furtherDialogue[dialogueID].dialogue[dialogueLine].erinText().length && i < step; i++) {
         ret = ret + furtherDialogue[dialogueID].dialogue[dialogueLine].erinText()[i]
@@ -771,7 +772,7 @@ addLayer("f", {
         erin: {
             title: "Erin",
             body() {return `
-                    <br><img src='resources/erinPortraits/${furtherDialogue[dialogueID].dialogue[dialogueLine].erinPortrait + (dialogueStep > furtherDialogue[dialogueID].dialogue[dialogueLine].erinText().length ? "Still" : "")}.png' width='305' height='363'><br>
+                    <br><img src='resources/erinPortraits/${(furtherDialogue[dialogueID].dialogue[dialogueLine].erinPortrait !== undefined ? furtherDialogue[dialogueID].dialogue[dialogueLine].erinPortrait : "erinNormal") + (dialogueStep > furtherDialogue[dialogueID].dialogue[dialogueLine].erinText().length ? "Still" : "")}.png' width='305' height='363'><br>
                     <br><p>${renderDialogue(Math.floor(dialogueStep))}</p><br>
                     <p>> ${furtherDialogue[dialogueID].dialogue[dialogueLine].command !== undefined ? furtherDialogue[dialogueID].dialogue[dialogueLine].command : ""}</p><br>
             `},
