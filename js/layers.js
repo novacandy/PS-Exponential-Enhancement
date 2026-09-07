@@ -620,7 +620,7 @@ addLayer('a', {
     milestones: {
         0: {
             requirementDescription: "7 augmented points",
-            effectDescription: "Start resets with enhance points amd enhancers equal to your current augmented point amount",
+            effectDescription: "Start resets with enhance points and enhancers equal to your current augmented point amount",
             done() {return player.a.points.gte(7)},
             unlocked() {return true}
         },
