@@ -78,7 +78,7 @@ const furtherDialogue = {
             {erinText: () => {return "Can we just move on please? I'm so sorry..."}, erinPortrait: "erinShy"},
             {erinText: () => {return "Um... well... Furtherer Enhance isn't that big of a reset as it may seem, it does reset everything in Further Enhance up to this point, but you keep your automerge and everything remains unlocked, so this should be a quick recovery."}, erinPortrait: "erinTired"},
             {erinText: () => {return "Also, furtherer enhance points work just like how regular enhance points worked all the way back at the beginning of this sapling, giving an exponentially increasing multiplier to further enhance point gain."}, erinPortrait: "erinTired"},
-            {erinText: () => {return "Yeah, um, once again, I apologize for the terribly named reset name, just reach purchase all the upgrades there for me and try to ignore how stupid the reset layer's name is..."}, erinPortrait: "erinShy", command: "Purchase all the Furtherer Enhance upgrades."},
+            {erinText: () => {return "Yeah, um, once again, I apologize for the terribly named reset name, just purchase all the upgrades there for me and try to ignore how stupid the reset layer's name is..."}, erinPortrait: "erinShy", command: "Purchase all the Furtherer Enhance upgrades."},
         ],
         trigger() {return player.f.best.gte(1e100)}
     },
