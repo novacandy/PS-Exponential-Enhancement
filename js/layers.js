@@ -1441,7 +1441,7 @@ addLayer("n", {
             title: "Further Enhancement",
             description() {return "Unlock the final layer."},
             cost: new Decimal(1000),
-            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
+            canAfford() {return player.n.points.gte(this.cost)},
             unlocked() {return hasUpgrade('n', 33)}
         }
     },
