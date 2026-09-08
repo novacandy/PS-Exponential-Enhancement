@@ -710,7 +710,7 @@ addLayer("f", {
             onClick() {
                 dialogueStep = 0
                 if (furtherDialogue[dialogueID].dialogue[dialogueLine+1] !== undefined) dialogueLine++
-                if (player.f.textInput != "" && dialogueID == "introduction" && dialogueLine == 10) {player.name = player.f.textInput; player.f.textInput = ""}
+                if (player.f.textInput !== "" && dialogueID == "introduction" && dialogueLine == 10) {player.name = player.f.textInput; player.f.textInput = ""}
             },
             canClick() {
                 if (player.f.textInput.length < 3 && dialogueID == "introduction" && dialogueLine == 10) return false
@@ -871,7 +871,7 @@ addLayer("f", {
     },
 
     update(diff) {
-        if (player.name !== "") player.f.points = player.f.points.add(tmp.f.getPointGen.mul(diff))
+        if (player.name !== "" || (player.f.best.gt(0) || dialogueLine > 10)) player.f.points = player.f.points.add(tmp.f.getPointGen.mul(diff))
         if (player.f.points.gte(player.f.best)) player.f.best = player.f.points
 
         for (dialogue in furtherDialogue) {
@@ -888,7 +888,7 @@ addLayer("f", {
         idLastTick = dialogueID
 
         player.f.mergeSpawnTimer = player.f.mergeSpawnTimer.add(diff)
-        if (player.f.mergeSpawnTimer >= new Decimal(10).mul(buyableEffect('f', 12)) && player.name !== "") {
+        if (player.f.mergeSpawnTimer >= new Decimal(10).mul(buyableEffect('f', 12)) && (player.name !== "" || (player.f.best.gt(0) || dialogueLine > 10))) {
             player.f.mergeSpawnTimer = new Decimal(0)
             let spawnable = []
             for (i in player.f.grid) {
@@ -975,7 +975,7 @@ addLayer("f", {
                     "blank",
                     ["buyables", [1]]
                 ],
-                unlocked() {return player.name !== ""}
+                unlocked() {return player.name !== ""  || (player.f.best.gt(0) || dialogueLine > 10)}
             },
             "Enhanced Replicanti": {
                 content: [
