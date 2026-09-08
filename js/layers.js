@@ -620,7 +620,7 @@ addLayer('a', {
     milestones: {
         0: {
             requirementDescription: "7 augmented points",
-            effectDescription: "Start resets with enhance points and enhancers equal to your current augmented point amount",
+            effectDescription: "Start resets with enhance points amd enhancers equal to your current augmented point amount",
             done() {return player.a.points.gte(7)},
             unlocked() {return true}
         },
@@ -1292,6 +1292,7 @@ addLayer("n", {
                 let effect = player.points.add(1).slog(10).add(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1306,6 +1307,7 @@ addLayer("n", {
                 let effect = player.e.points.add(1).slog(10).div(10)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1320,6 +1322,7 @@ addLayer("n", {
                 let effect = player.i.points.add(1).slog(10).pow(7).add(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1334,6 +1337,7 @@ addLayer("n", {
                 let effect = player.b.points.add(1).slog(10).pow(0.2)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1348,6 +1352,7 @@ addLayer("n", {
                 let effect = player.a.points.add(1).slog(10).mul(100).add(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1362,6 +1367,7 @@ addLayer("n", {
                 let effect = player.r.points.add(1).slog(10).add(1).log(2.5).max(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1376,6 +1382,7 @@ addLayer("n", {
                 let effect = player.sb.points.add(1).slog(10).add(1).log(3).add(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1390,6 +1397,7 @@ addLayer("n", {
                 let effect = player.n.points.add(1)
                 return effect
             },
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1400,6 +1408,7 @@ addLayer("n", {
             title: "Lucky Seven",
             description() {return "Auto buy max Intensified Dimension VII and raise its exponent to the power of ^7."},
             cost: new Decimal("eeee10000"),
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1410,6 +1419,7 @@ addLayer("n", {
             title: "Magic Eight",
             description() {return "Auto buy max Intensified Dimension VIII and raise effective purchased Intensified Dimension VII amount to the power of ^8."},
             cost: new Decimal("eeeee250"),
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1420,6 +1430,7 @@ addLayer("n", {
             title: "Nonexistent Nine",
             description() {return "Auto buy max Intensified Dimension IX and make the intensified point effect 9^x. Effect: ^" + format(Decimal.pow(9, player.n.intensifiedPoints))},
             cost: new Decimal("eeeeee100"),
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             pay() {player.n.intensifiedPoints = player.n.intensifiedPoints.div(this.cost)},
             currencyLayer: 'n',
             currencyInternalName: 'intensifiedPoints',
@@ -1430,6 +1441,7 @@ addLayer("n", {
             title: "Further Enhancement",
             description() {return "Unlock the final layer."},
             cost: new Decimal(1000),
+            canAfford() {return player.n.intensifiedPoints.gte(this.cost)},
             unlocked() {return hasUpgrade('n', 33)}
         }
     },
@@ -1460,18 +1472,18 @@ addLayer("n", {
     ],
 
     update(diff) {
-        if (hasMilestone('n', 1)) player.n.intensifiedPoints = player.n.intensifiedPoints.mul(player.n.intensifiedDimensions[0].pow(buyableEffect('n', 11)).pow(diff)).max(1)
-        if (hasMilestone('n', 2)) player.n.intensifiedDimensions[0] = player.n.intensifiedDimensions[0].mul(player.n.intensifiedDimensions[1].pow(buyableEffect('n', 12).pow(diff))).max(1)
-        if (hasMilestone('n', 3)) player.n.intensifiedDimensions[1] = player.n.intensifiedDimensions[1].mul(player.n.intensifiedDimensions[2].pow(buyableEffect('n', 13).pow(diff))).max(1)
-        if (hasMilestone('n', 4)) player.n.intensifiedDimensions[2] = player.n.intensifiedDimensions[2].mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21).pow(diff))).max(1)
-        if (hasMilestone('n', 5)) player.n.intensifiedDimensions[3] = player.n.intensifiedDimensions[3].mul(player.n.intensifiedDimensions[4].pow(buyableEffect('n', 22).pow(diff))).max(1)
-        if (hasMilestone('n', 6)) player.n.intensifiedDimensions[4] = player.n.intensifiedDimensions[4].mul(player.n.intensifiedDimensions[5].pow(buyableEffect('n', 23).pow(diff))).max(1)
-        if (hasMilestone('n', 7)) player.n.intensifiedDimensions[5] = player.n.intensifiedDimensions[5].mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31).pow(diff))).max(1)
-        if (hasMilestone('n', 8)) player.n.intensifiedDimensions[6] = player.n.intensifiedDimensions[6].mul(player.n.intensifiedDimensions[7].pow(buyableEffect('n', 32).pow(diff))).max(1)
-        if (hasMilestone('n', 9)) player.n.intensifiedDimensions[7] = player.n.intensifiedDimensions[7].mul(player.n.intensifiedDimensions[8].pow(buyableEffect('n', 33).pow(diff))).max(1)
+        if (hasMilestone('n', 1)) player.n.intensifiedPoints = player.n.intensifiedPoints.mul(player.n.intensifiedDimensions[0].pow(buyableEffect('n', 11)).pow(diff))
+        if (hasMilestone('n', 2)) player.n.intensifiedDimensions[0] = player.n.intensifiedDimensions[0].mul(player.n.intensifiedDimensions[1].pow(buyableEffect('n', 12).pow(diff)))
+        if (hasMilestone('n', 3)) player.n.intensifiedDimensions[1] = player.n.intensifiedDimensions[1].mul(player.n.intensifiedDimensions[2].pow(buyableEffect('n', 13).pow(diff)))
+        if (hasMilestone('n', 4)) player.n.intensifiedDimensions[2] = player.n.intensifiedDimensions[2].mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21).pow(diff)))
+        if (hasMilestone('n', 5)) player.n.intensifiedDimensions[3] = player.n.intensifiedDimensions[3].mul(player.n.intensifiedDimensions[4].pow(buyableEffect('n', 22).pow(diff)))
+        if (hasMilestone('n', 6)) player.n.intensifiedDimensions[4] = player.n.intensifiedDimensions[4].mul(player.n.intensifiedDimensions[5].pow(buyableEffect('n', 23).pow(diff)))
+        if (hasMilestone('n', 7)) player.n.intensifiedDimensions[5] = player.n.intensifiedDimensions[5].mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31).pow(diff)))
+        if (hasMilestone('n', 8)) player.n.intensifiedDimensions[6] = player.n.intensifiedDimensions[6].mul(player.n.intensifiedDimensions[7].pow(buyableEffect('n', 32).pow(diff)))
+        if (hasMilestone('n', 9)) player.n.intensifiedDimensions[7] = player.n.intensifiedDimensions[7].mul(player.n.intensifiedDimensions[8].pow(buyableEffect('n', 33).pow(diff)))
         
-        if (hasMilestone('n', 4)) player.n.ID4Exp = player.n.ID4Exp.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(diff)).max(1)
-        if (hasMilestone('n', 7)) player.n.ID7Exp = player.n.ID7Exp.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(diff)).max(1)
+        if (hasMilestone('n', 4)) player.n.ID4Exp = player.n.ID4Exp.mul(player.n.intensifiedDimensions[3].pow(buyableEffect('n', 21)).pow(diff))
+        if (hasMilestone('n', 7)) player.n.ID7Exp = player.n.ID7Exp.mul(player.n.intensifiedDimensions[6].pow(buyableEffect('n', 31)).pow(diff))
 
         if (hasMilestone('n', 5)) { // buy max row 1 IDs
             let buy1 = player.n.intensifiedPoints.add(1).log(10).add(1).log(10)
