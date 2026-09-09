@@ -880,7 +880,7 @@ addLayer("f", {
             }
         }
         dialogueStep += diff * 25
-        if (tabLastTick !== player.subtabs.f.furtherEnhance && player.subtabs.f.furtherEnhance == "Erin" && idLastTick !== dialogueID) {
+        if ((tabLastTick !== player.subtabs.f.furtherEnhance && player.subtabs.f.furtherEnhance == "Erin" && idLastTick !== dialogueID) || (furtherDialogue[dialogueID].dialogue[dialogueLine] == undefined)) {
             dialogueStep = 0
             dialogueLine = 0
         }
